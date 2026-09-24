@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^bash -lc 'eval \"\\$\\(/home/gpernas/\\.ciaoroot/v1\\.25\\.0-m1/build/bin/ciao-env --sh\\)\" && echo \"--- PATH check ---\" && printf \"%s\\\\n\" \"\\$PATH\" \\| tr : \"\\\\n\" \\| grep -n \"/\\.ciaoroot/\\\\\\|/\\\\\\.ciao/\" \\|\\| true && echo \"--- which ciao ---\" && which ciao && echo \"--- ciao version probe ---\" && ciao --help 2>/dev/null \\| head -20'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
