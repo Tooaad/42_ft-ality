@@ -1,3 +1,5 @@
 *.Identifier
 *.po
 *.itf
+*.cmi
+*.cmo
