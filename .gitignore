@@ -1,5 +1,7 @@
 *.Identifier
-*.po
-*.itf
+_build/
 *.cmi
 *.cmo
+*.cmx
+*.o
+ft_ality
