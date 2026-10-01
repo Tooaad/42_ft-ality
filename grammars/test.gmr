@@ -1,0 +1,9 @@
+# Teclas: tecla = simbolo
+s = [BP]
+x = [FP]
+z = [FK]
+
+# Movimientos: simbolos separados por coma : nombre
+[BP] : Golpe rapido
+[BP], [FP] : Combo del puno
+[BP], [FK] : Combo de la patada
