@@ -1,10 +1,65 @@
-# OCaml y Programación Funcional
+# ft_ality
+
+Entrenador de combos de juegos de lucha basado en un autómata finito, hecho en OCaml.
+Ver `en.subject.pdf` para el enunciado.
+
+## Primeros pasos
+
+### 1. Instalar el entorno OCaml (WSL2 / Ubuntu)
+
+```bash
+make -f setup.mk
+```
+
+Esto instala `opam`, OCaml y las herramientas de desarrollo (`dune`, `ocaml-lsp-server`, `ocamlformat`, `utop`).
+Pide `sudo` y tarda unos minutos.
+
+Cuando termine, carga el entorno en tu terminal:
+
+```bash
+eval $(opam env)
+```
+
+Comprueba que funciona:
+
+```bash
+ocaml -version
+```
+
+> `setup.mk` es solo para preparar la máquina de desarrollo. No es el Makefile del proyecto.
+
+### 2. Instalar la extensión de VS Code
+
+Instala **OCaml Platform** (de OCaml Labs). Da errores en vivo, tipos al pasar el ratón y autocompletado.
+
+### 3. Probar OCaml
+
+Abre el intérprete interactivo:
+
+```bash
+utop
+```
+
+Escribe una expresión terminada en `;;` (solo en `utop`; en los ficheros del proyecto `;;` está prohibido), por ejemplo `1 + 2;;`. Sal con `Ctrl+D`.
+
+## Reglas del subject a tener presentes
+
+- Lenguaje funcional, sin librerías externas que hagan el trabajo.
+- Módulos permitidos: `Pervasives`, `List`, `String`, `Sys`, `Sdl`, `Sdlevent`, `Sdlkey`.
+- Prohibidos: la palabra clave `open` y el token `;;` en el código fuente.
+- Las teclas se calculan desde la gramática, nunca se hardcodean.
+- Hay que entregar un `Makefile` que compile todo el proyecto y nuestros propios ficheros de gramática.
+
+---
+
+## Guía de OCaml y programación funcional
+
 
 Este documento resume los conceptos básicos necesarios para empezar a programar en **OCaml** y entender el paradigma de **programación funcional**.
 
 ---
 
-# 1. ¿Qué es OCaml?
+### 1. ¿Qué es OCaml?
 
 OCaml es un lenguaje de programación **multiparadigma**, aunque destaca especialmente por la programación funcional.
 
@@ -35,7 +90,7 @@ doble 5
 
 ---
 
-# 2. `let`: declarar valores y funciones
+### 2. `let`: declarar valores y funciones
 
 En OCaml usamos `let` para definir valores.
 
@@ -89,7 +144,7 @@ Resultado:
 
 ---
 
-# 3. Tipos
+### 3. Tipos
 
 OCaml tiene tipado estático.
 
@@ -142,7 +197,7 @@ es incorrecto porque `"hola"` es un `string`.
 
 ---
 
-# 4. Tipos básicos
+### 4. Tipos básicos
 
 Algunos tipos importantes son:
 
@@ -189,7 +244,7 @@ Los operadores de los floats llevan `.`:
 
 ---
 
-# 5. `if / else`
+### 5. `if / else`
 
 OCaml permite utilizar condiciones:
 
@@ -222,7 +277,7 @@ true
 
 ---
 
-# 6. Listas
+### 6. Listas
 
 Las listas son una de las estructuras más utilizadas en programación funcional.
 
@@ -254,7 +309,7 @@ Esto no:
 
 ---
 
-# 7. Lista vacía
+### 7. Lista vacía
 
 Una lista vacía se representa como:
 
@@ -270,7 +325,7 @@ let lista = []
 
 ---
 
-# 8. Cabeza y cola de una lista
+### 8. Cabeza y cola de una lista
 
 Una lista se puede pensar como:
 
@@ -312,7 +367,7 @@ produce:
 
 ---
 
-# 9. Pattern Matching
+### 9. Pattern Matching
 
 El **pattern matching** permite comprobar la forma que tienen los datos.
 
@@ -363,7 +418,7 @@ Resultado:
 
 ---
 
-# 10. El carácter `_`
+### 10. El carácter `_`
 
 Cuando no necesitamos utilizar un valor podemos poner `_`.
 
@@ -388,7 +443,7 @@ cabeza :: _
 
 ---
 
-# 11. Recursividad
+### 11. Recursividad
 
 En programación funcional la recursividad suele sustituir muchos de los bucles tradicionales.
 
@@ -412,7 +467,7 @@ let rec cuenta_atras n =
 
 ---
 
-# 12. Recorrer una lista mediante recursividad
+### 12. Recorrer una lista mediante recursividad
 
 Podemos recorrer una lista utilizando pattern matching y recursividad.
 
@@ -452,7 +507,7 @@ Resultado:
 
 ---
 
-# 13. Calcular la longitud de una lista
+### 13. Calcular la longitud de una lista
 
 También podemos calcular manualmente la longitud:
 
@@ -488,7 +543,7 @@ Solo queremos contar cuántos existen.
 
 ---
 
-# 14. Funciones como argumentos
+### 14. Funciones como argumentos
 
 Una característica fundamental de la programación funcional es que una función puede recibir otra función.
 
@@ -522,7 +577,7 @@ Las funciones pueden tratarse como cualquier otro valor.
 
 ---
 
-# 15. Funciones anónimas
+### 15. Funciones anónimas
 
 No siempre necesitamos dar nombre a una función.
 
@@ -552,7 +607,7 @@ Resultado:
 
 ---
 
-# 16. `List.map`
+### 16. `List.map`
 
 `List.map` aplica una función a cada elemento de una lista.
 
@@ -598,7 +653,7 @@ Conceptualmente:
 
 ---
 
-# 17. `List.filter`
+### 17. `List.filter`
 
 `List.filter` permite conservar únicamente los elementos que cumplen una condición.
 
@@ -635,7 +690,7 @@ cuando el número es par.
 
 ---
 
-# 18. `List.fold_left`
+### 18. `List.fold_left`
 
 `List.fold_left` permite recorrer una lista acumulando un resultado.
 
@@ -677,11 +732,11 @@ List.fold_left ( + ) 0 numeros
 
 ---
 
-# 19. `map`, `filter` y `fold`
+### 19. `map`, `filter` y `fold`
 
 Estas tres funciones aparecen constantemente en programación funcional.
 
-## `map`
+#### `map`
 
 Transforma elementos.
 
@@ -699,7 +754,7 @@ List.map (fun x -> x * 2) [1; 2; 3]
 
 ---
 
-## `filter`
+#### `filter`
 
 Selecciona elementos.
 
@@ -717,7 +772,7 @@ List.filter (fun x -> x mod 2 = 0) [1; 2; 3; 4]
 
 ---
 
-## `fold`
+#### `fold`
 
 Combina todos los elementos para producir un resultado.
 
@@ -735,7 +790,7 @@ List.fold_left ( + ) 0 [1; 2; 3; 4]
 
 ---
 
-# 20. Inmutabilidad
+### 20. Inmutabilidad
 
 En programación funcional intentamos evitar modificar valores existentes.
 
@@ -764,7 +819,7 @@ Esto facilita razonar sobre lo que hace un programa.
 
 ---
 
-# 21. Transformación de datos
+### 21. Transformación de datos
 
 Una forma útil de pensar funcionalmente es:
 
@@ -818,7 +873,7 @@ Después filtramos los mayores que `5`:
 
 ---
 
-# 22. Tipos personalizados
+### 22. Tipos personalizados
 
 OCaml permite crear nuestros propios tipos.
 
@@ -861,7 +916,7 @@ Resultado:
 
 ---
 
-# 23. Tipos con información
+### 23. Tipos con información
 
 Los tipos también pueden almacenar información.
 
@@ -897,7 +952,7 @@ let area figura =
 
 ---
 
-# 24. Árboles
+### 24. Árboles
 
 Los tipos propios permiten representar estructuras más complejas.
 
@@ -953,7 +1008,7 @@ Resultado:
 
 ---
 
-# 25. Tuplas
+### 25. Tuplas
 
 Una tupla agrupa varios valores.
 
@@ -985,7 +1040,7 @@ let (nombre, edad) = persona
 
 ---
 
-# 26. `option`
+### 26. `option`
 
 En muchos lenguajes se utiliza `null` para representar que algo no existe.
 
@@ -1045,7 +1100,7 @@ None
 
 ---
 
-# 27. Módulos
+### 27. Módulos
 
 Los módulos permiten organizar el código.
 
@@ -1098,7 +1153,7 @@ List.rev
 
 ---
 
-# 28. Leer documentación de un módulo
+### 28. Leer documentación de un módulo
 
 Cuando veas algo como:
 
@@ -1180,7 +1235,7 @@ Resultado:
 
 ---
 
-# 29. `'a`, `'b`, etc.
+### 29. `'a`, `'b`, etc.
 
 Cuando aparezca:
 
@@ -1243,7 +1298,7 @@ List.length ["a"; "b"; "c"]
 
 ---
 
-# 30. Programación imperativa frente a funcional
+### 30. Programación imperativa frente a funcional
 
 Una suma en estilo imperativo podría pensarse como:
 
@@ -1294,7 +1349,7 @@ resultado
 
 ---
 
-# 31. Orden recomendado para aprender OCaml
+### 31. Orden recomendado para aprender OCaml
 
 Un buen orden para aprenderlo es:
 
@@ -1332,7 +1387,7 @@ Un buen orden para aprenderlo es:
 
 ---
 
-# 32. Ejemplo completo
+### 32. Ejemplo completo
 
 Supongamos que tenemos:
 
@@ -1405,7 +1460,7 @@ let resultado =
 
 ---
 
-# 33. Operador `|>`
+### 33. Operador `|>`
 
 El operador:
 
@@ -1455,7 +1510,7 @@ resultado
 
 ---
 
-# 34. Conceptos fundamentales que deberías recordar
+### 34. Conceptos fundamentales que deberías recordar
 
 Si estás empezando, los conceptos más importantes son:
 
@@ -1562,7 +1617,7 @@ Combinar elementos y obtener un resultado.
 
 ---
 
-# 35. Resumen
+### 35. Resumen
 
 OCaml utiliza mucho:
 
