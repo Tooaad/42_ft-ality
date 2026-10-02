@@ -1,7 +1,5 @@
 (* Q: conjunto de estados *)
-type state =
-  | Q0
-  | Q1
+type state = int
 
 (* Σ: alfabeto *)
 type symbol =
@@ -9,19 +7,18 @@ type symbol =
   | One
 
 (* Q0: estado inicial *)
-let initial_state = Q0
+let initial_state = int
 
 (* F: estados finales *)
-let final_states = [Q1]
+let final_states = int list
 
-(* δ: función de transición *)
-let transition state symbol =
-  match state, symbol with
-  | Q0, Zero -> Q0
-  | Q0, One  -> Q1
-  | Q1, Zero -> Q0
-  | Q1, One  -> Q1
-  | _ -> None
+(* δ: función de transición - a construir en el training*)
+(* let transitions = [
+  (0, Zero, 0);
+  (0, One, 1);
+  (1, Zero, 0);
+  (1, One, 1);
+] *)
 
 (* δ*: aplicar δ a toda la palabra *)
 let rec run state word =
@@ -41,3 +38,28 @@ let accepts word =
 let () =
   let result = accepts [One; Zero; One; One] in
   print_endline (string_of_bool result)
+
+(* [Zero, Zero] *)
+  let rec train (state) (word) (transitions) (final_states) (next_free_state) =
+    match word with 
+    | [] ->
+    let new_final_states = state :: final_states in
+    (List.rev transitions, new_final_states, next_free_state) (* Devolvemos la lista en orden de inicio-fin*)
+    | symbol :: rest ->
+      match find_transition state symbol transitions with
+      | Some next_state ->
+          train (next_state) (rest) (transitions) (next_free_state) (* Ha habido coincidencia con una transicion existente then pasamos *)
+          | None ->
+            let next_state = next_free_state in (* Aumentamos contador a donde transiciona el siguiente estado *)
+            let new_transition = (state, symbol, next_state) in (* guardamos tupla *)
+            let new_transitions = new_transition :: transitions in (* guardamos en la lista *)
+            train (next_state) (rest) (new_transitions) (next_free_state+1) (* llamamos a la funcion de nuevo *)
+
+  let rec find_transition (state) (symbol) (transitions) =
+    match transitions with
+    | [] -> None
+    | (origin, sym, destination) :: rest ->
+      if origin = state && sym = symbol then
+        Some destination
+      else
+        find_transition (state) (symbol) (rest)

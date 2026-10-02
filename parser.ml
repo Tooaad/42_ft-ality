@@ -1,4 +1,4 @@
-let split_once (sep : char) (s : string) : (string * string) option =
+let split_once sep s : (string * string) option =
   match String.index_opt s sep with
   | None -> None
   | Some i ->
