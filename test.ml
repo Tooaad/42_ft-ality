@@ -39,14 +39,22 @@ let () =
   let result = accepts [One; Zero; One; One] in
   print_endline (string_of_bool result)
 
-(* [Zero, Zero] *)
+
+  let rec train_words (words) (transitions) (final_states) (next_free_state)  =
+    match words with
+    | [] -> (transitions, final_states, next_free_state)
+    | word :: rest ->
+        let (new_transitions, new_final_states, new_next_free_state) =
+          train 0 word transitions final_states next_free_state in
+          train_words (rest) (new_transitions) (new_final_states) (new_next_free_state)
+
   let rec train (state) (word) (transitions) (final_states) (next_free_state) =
     match word with 
     | [] ->
-    let new_final_states = state :: final_states in
-    (List.rev transitions, new_final_states, next_free_state) (* Devolvemos la lista en orden de inicio-fin*)
+      let new_final_states = state :: final_states in
+      (List.rev transitions, new_final_states, next_free_state) (* Devolvemos la lista en orden de inicio-fin*)
     | symbol :: rest ->
-      match find_transition state symbol transitions with
+      match find_transition (state) (symbol) (transitions) with
       | Some next_state ->
           train (next_state) (rest) (transitions) (next_free_state) (* Ha habido coincidencia con una transicion existente then pasamos *)
           | None ->
