@@ -50,17 +50,31 @@ let classify_line (raw : string) : Grammar.line =
       | Some b -> Grammar.Key b
       | None -> Grammar.Invalid line
 
-(* PASO 5: leer un fichero entero como lista de lineas.
-   Acumula las lineas al reves (la ultima leida va primero) y le da la vuelta al final.
+(* PASO 5: anadir una linea ya clasificada a la gramatica que llevamos construida.
+   Las listas se acumulan al reves (lo ultimo anadido va primero); reverse las endereza.
+   add_line g (Key ("s", "[BP]"))  ->  g con ("s", "[BP]") anadido al keymap
+   add_line g Skip                 ->  g sin cambios *)
+let add_line (g : Grammar.grammar) (line : Grammar.line) : Grammar.grammar =
+  match line with
+  | Grammar.Key b -> { g with Grammar.keymap = b :: g.Grammar.keymap }
+  | Grammar.Move m -> { g with Grammar.moves = m :: g.Grammar.moves }
+  | Grammar.Skip | Grammar.Invalid _ -> g
+
+let empty_grammar : Grammar.grammar = { Grammar.keymap = []; moves = [] }
+
+let reverse_grammar (g : Grammar.grammar) : Grammar.grammar =
+  { Grammar.keymap = List.rev g.Grammar.keymap; moves = List.rev g.Grammar.moves }
+
+(* PASO 6: leer el fichero linea a linea, construyendo la gramatica a la vez.
    input_line lanza End_of_file al terminar; la excepcion solo protege a input_line,
    asi que la llamada recursiva sigue siendo lo ultimo que se hace (recursion de cola). *)
-let rec read_all (ic : in_channel) (acc : string list) : string list =
+let rec read_all (ic : in_channel) (g : Grammar.grammar) : Grammar.grammar =
   match input_line ic with
-  | l -> read_all ic (l :: acc)
-  | exception End_of_file -> List.rev acc
+  | l -> read_all ic (add_line g (classify_line l))
+  | exception End_of_file -> reverse_grammar g
 
-let read_lines (path : string) : string list =
+let read_grammar (path : string) : Grammar.grammar =
   let ic = open_in path in
-  let lines = read_all ic [] in
+  let g = read_all ic empty_grammar in
   let () = close_in ic in
-  lines
+  g

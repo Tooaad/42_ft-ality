@@ -11,3 +11,9 @@ type line =
   | Key of binding        (* "s = [BP]"  ->  Key ("s", "[BP]") *)
   | Move of move          (* "[BP] : Golpe"  ->  Move (["[BP]"], "Golpe") *)
   | Invalid of string     (* no encaja con nada: "basura"  ->  Invalid "basura" *)
+
+(* Lo que se obtiene de leer un fichero de gramatica entero *)
+type grammar = {
+  keymap : keymap;       (* para el teclado: tecla -> simbolo *)
+  moves : move list;     (* para construir el automata *)
+}
