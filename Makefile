@@ -1,21 +1,30 @@
 NAME = ft_ality
 
 # Ficheros fuente, en orden de dependencia (un modulo solo puede usar los anteriores)
-SRC = types.ml parser.ml automaton.ml
-OBJ = $(SRC:.ml=.cmx)
+SRC = types.ml grammar.ml parser.ml automaton.ml
+OBJDIR = obj
+OBJ = $(addprefix $(OBJDIR)/, $(SRC:.ml=.cmx))
 
-OCAMLOPT = ocamlfind ocamlopt
+OCAMLOPT = ocamlfind ocamlopt -I $(OBJDIR)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(OCAMLOPT) -o $@ $(OBJ)
 
-%.cmx: %.ml
-	$(OCAMLOPT) -c $<
+$(OBJDIR)/%.cmx: %.ml | $(OBJDIR)
+	$(OCAMLOPT) -c -o $@ $<
+
+$(OBJDIR):
+	mkdir -p $@
+
+# Dependencias entre modulos: si cambia types.ml, se recompilan los que lo usan
+$(OBJDIR)/grammar.cmx: $(OBJDIR)/types.cmx
+$(OBJDIR)/parser.cmx: $(OBJDIR)/grammar.cmx
+$(OBJDIR)/automaton.cmx: $(OBJDIR)/types.cmx
 
 clean:
-	rm -f *.cmi *.cmx *.o
+	rm -rf $(OBJDIR)
 
 fclean: clean
 	rm -f $(NAME)
