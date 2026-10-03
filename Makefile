@@ -1,7 +1,7 @@
 NAME = ft_ality
 
 # Ficheros fuente, en orden de dependencia (un modulo solo puede usar los anteriores)
-SRC = types.ml grammar.ml parser.ml automaton.ml
+SRC = types.ml grammar.ml parser.ml automaton.ml terminal.ml
 OBJDIR = obj
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.ml=.cmx))
 
