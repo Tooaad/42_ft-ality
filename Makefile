@@ -22,7 +22,7 @@ $(OBJDIR):
 $(OBJDIR)/grammar.cmx: $(OBJDIR)/types.cmx
 $(OBJDIR)/parser.cmx: $(OBJDIR)/grammar.cmx
 $(OBJDIR)/automaton.cmx: $(OBJDIR)/types.cmx
-$(OBJDIR)/trainer.cmx: $(OBJDIR)/grammar.cmx
+$(OBJDIR)/trainer.cmx: $(OBJDIR)/automaton.cmx $(OBJDIR)/grammar.cmx
 $(OBJDIR)/keymap.cmx: $(OBJDIR)/grammar.cmx
 $(OBJDIR)/main.cmx: $(OBJDIR)/parser.cmx $(OBJDIR)/automaton.cmx $(OBJDIR)/trainer.cmx $(OBJDIR)/keymap.cmx $(OBJDIR)/terminal.cmx
 
