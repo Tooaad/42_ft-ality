@@ -1,5 +1,4 @@
 *.Identifier
-_build/
 *.cmi
 *.cmo
 *.cmx

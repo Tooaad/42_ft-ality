@@ -11,7 +11,7 @@ Ver `en.subject.pdf` para el enunciado.
 make -f setup.mk
 ```
 
-Esto instala `opam`, OCaml y las herramientas de desarrollo (`dune`, `ocaml-lsp-server`, `ocamlformat`, `utop`).
+Esto instala `opam`, OCaml, las librerías del proyecto (`ocamlfind`, `ocamlsdl` con `libsdl1.2-dev`) y las herramientas de desarrollo (`ocaml-lsp-server`, `utop`). El proyecto se construye solo con el `Makefile`.
 Pide `sudo` y tarda unos minutos.
 
 Cuando termine, carga el entorno en tu terminal:
