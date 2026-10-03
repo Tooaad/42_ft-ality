@@ -1,9 +1,7 @@
-type symbol = string
-type state = int
+type symbol = string (* lo que entiende la maquina, ej: "UP", "DOWN" , etc *)
+type state = int 
 type transition = state * symbol * state
 type final = state * string list
-type key = string
-type keymap = (key * symbol) list 
 
 type automata = {
   states : state list;           (* Q  *)
