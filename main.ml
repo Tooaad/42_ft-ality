@@ -29,23 +29,12 @@ let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state
       let () = show_recognized a next in
       loop a keymap next
 
-(* PROVISIONAL: automata escrito a mano para grammars/test.gmr, para poder probar el programa.
-   Es lo unico que hay que sustituir cuando exista el entrenamiento: esta funcion tendra que
-   construir el automata a partir de los movimientos de la gramatica (grammar.Grammar.moves). *)
-let automaton_of (_ : Grammar.grammar) : Types.automata = {
-  Types.states = [0; 1; 2; 3];
-  alphabet = ["[BP]"; "[FP]"; "[FK]"];
-  initial = 0;
-  finals = [(1, ["Golpe rapido"]); (2, ["Combo del puno"]); (3, ["Combo de la patada"])];
-  transitions = [(0, "[BP]", 1); (1, "[FP]", 2); (1, "[FK]", 3)];
-}
-
 (* PIEZA 3: poner el programa en marcha con un fichero de gramatica.
-   Lee la gramatica, construye el automata, muestra el mapeo de teclas, pone el terminal
+   Lee la gramatica, la entrena en un automata, muestra el mapeo de teclas, pone el terminal
    en modo crudo y empieza a leer teclas desde el estado inicial. *)
 let run (path : string) : unit =
   let grammar = Parser.read_grammar path in
-  let a = automaton_of grammar in
+  let a = Trainer.build_automata grammar in
   let () = Keymap.print_mappings grammar.Grammar.keymap in
   let () = Terminal.start () in
   loop a grammar.Grammar.keymap a.Types.initial
