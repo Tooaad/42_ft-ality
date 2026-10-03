@@ -13,3 +13,15 @@ let recognized (a : Types.automata) (s : Types.state) : string list =
   match List.assoc_opt s a.Types.finals with
   | Some names -> names
   | None -> []
+
+(* Secuencia de simbolos que lleva del estado inicial hasta el estado s.
+   El automata es un arbol (los prefijos se comparten), asi que cada estado tiene una
+   unica flecha de entrada y el camino es unico.
+   path_to a 2  ->  ["[BP]"; "[FP]"]     (0 --[BP]--> 1 --[FP]--> 2)
+   path_to a 0  ->  [] *)
+let rec path_to (a : Types.automata) (s : Types.state) : Types.symbol list =
+  if s = a.Types.initial then []
+  else
+    match List.find_opt (fun (_, _, dest) -> dest = s) a.Types.transitions with
+    | Some (from, sym, _) -> path_to a from @ [sym]
+    | None -> []
