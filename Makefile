@@ -1,7 +1,7 @@
 NAME = ft_ality
 
 # Ficheros fuente, en orden de dependencia (un modulo solo puede usar los anteriores)
-SRC = types.ml grammar.ml parser.ml automaton.ml terminal.ml
+SRC = types.ml grammar.ml parser.ml automaton.ml keymap.ml terminal.ml
 OBJDIR = obj
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.ml=.cmx))
 
@@ -22,6 +22,7 @@ $(OBJDIR):
 $(OBJDIR)/grammar.cmx: $(OBJDIR)/types.cmx
 $(OBJDIR)/parser.cmx: $(OBJDIR)/grammar.cmx
 $(OBJDIR)/automaton.cmx: $(OBJDIR)/types.cmx
+$(OBJDIR)/keymap.cmx: $(OBJDIR)/grammar.cmx
 
 clean:
 	rm -rf $(OBJDIR)
