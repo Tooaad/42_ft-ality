@@ -44,8 +44,8 @@ and add_final (state) (move_name) (final_states) =
       (final_state, moves) :: add_final state move_name rest
 
 (* Gramatica -> automata *)
-let build_automata (g : Grammar.grammar) : Types.automata =
-  let (transitions, finals, next_free_state) = train_words g.Grammar.moves [] [] 1 in
+let build_automata (grammar) =
+  let (transitions, finals, next_free_state) = train_words grammar.Grammar.moves [] [] 1 in
   {
     Types.states = List.init next_free_state (fun i -> i);
     alphabet = List.sort_uniq compare (List.map (fun (_, s, _) -> s) transitions);

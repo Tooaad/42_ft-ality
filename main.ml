@@ -23,8 +23,9 @@ let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state
   | None -> ()
   | Some key ->
     match Keymap.lookup_symbol keymap key with
-    | None -> loop a keymap state
+    | None -> loop a keymap a.Types.initial 
     | Some sym ->
+      let () = print_endline sym in
       let next = Automaton.transition a state sym in
       let () = show_recognized a next in
       loop a keymap next
@@ -33,11 +34,14 @@ let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state
    Lee la gramatica, la entrena en un automata, muestra el mapeo de teclas, pone el terminal
    en modo crudo y empieza a leer teclas desde el estado inicial. *)
 let run (path : string) : unit =
-  let grammar = Parser.read_grammar path in
-  let a = Trainer.build_automata grammar in
-  let () = Keymap.print_mappings grammar.Grammar.keymap in
-  let () = Terminal.start () in
-  loop a grammar.Grammar.keymap a.Types.initial
+  match Parser.read_grammar path with
+  | exception Sys_error msg -> prerr_endline ("ft_ality: " ^ msg); exit 1
+  | grammar ->
+    let grammar = Parser.read_grammar path in
+    let a = Trainer.build_automata grammar in
+    let () = Keymap.print_mappings grammar.Grammar.keymap in
+    let () = Terminal.start () in
+    loop a grammar.Grammar.keymap a.Types.initial
 
 (* PIEZA 4: punto de entrada. Lee el argumento de la linea de comandos (ruta de la gramatica)
    y pone el programa en marcha. Comprueba aqui los argumentos, que es lo unico que conoce
