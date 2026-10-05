@@ -1,32 +1,33 @@
-(* PIEZA 1: mostrar lo que reconoce un estado.
-   Si el estado tiene movimientos asociados, imprime la secuencia que lleva hasta el
-   (Automaton.path_to), los nombres (cada uno con " !!") y una linea en blanco.
-   Si no reconoce nada, no imprime nada.
-   show_recognized a 1  ->  [BP]
-                            Golpe rapido !!
-                            (linea en blanco) *)
-let show_recognized (a : Types.automata) (state : Types.state) : unit =
-  match Automaton.recognized a state with
+(* PIEZA 1: mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
+   si reconoce movimientos, sus nombres con " !!" y una linea en blanco. Si la secuencia
+   reinicia (el intento se abandona o ya habia terminado), antes imprime una linea de guiones. *)
+let show_progress (a : Types.automata) (prev : Types.state) (next : Types.state) : unit =
+  let prev_length = List.length (Automaton.path_to a prev) in
+  let path = Automaton.path_to a next in
+  let () = if prev_length > 0 && List.length path <= prev_length then print_endline "----------------------" in
+  match path with
   | [] -> ()
-  | names ->
-    let () = print_endline (String.concat ", " (Automaton.path_to a state)) in
-    let () = List.iter (fun name -> print_endline (name ^ " !!")) names in
-    print_endline ""
+  | _ ->
+    let () = print_endline (String.concat ", " path) in
+    match Automaton.recognized a next with
+    | [] -> ()
+    | names ->
+      let () = List.iter (fun name -> print_endline (name ^ " !!")) names in
+      print_endline ""
 
-(* PIEZA 2: bucle principal. Lee una tecla, la traduce a simbolo con el keymap, avanza el
-   automata y muestra lo que reconoce el estado al que llega. Las teclas sin mapear se
-   ignoran (el estado no cambia). Termina cuando no quedan teclas (Terminal.next_key
-   devuelve None).
-   El estado actual viaja como argumento de una vuelta a la siguiente. *)
+(* PIEZA 2: bucle principal. Lee una tecla, la traduce a simbolo, avanza el automata y muestra
+   el progreso. Las teclas sin mapear reinician el automata. El estado viaja como argumento. *)
 let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state) : unit =
   match Terminal.next_key () with
   | None -> ()
   | Some key ->
     match Keymap.lookup_symbol keymap key with
-    | None -> loop a keymap a.Types.initial 
+    | None ->
+      let () = show_progress a state a.Types.initial in
+      loop a keymap a.Types.initial
     | Some sym ->
       let next = Automaton.transition a state sym in
-      let () = show_recognized a next in
+      let () = show_progress a state next in
       loop a keymap next
 
 (* PIEZA 3: poner el programa en marcha con un fichero de gramatica.
