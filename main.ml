@@ -37,7 +37,6 @@ let run (path : string) : unit =
   match Parser.read_grammar path with
   | exception Sys_error msg -> prerr_endline ("ft_ality: " ^ msg); exit 1
   | grammar ->
-    let grammar = Parser.read_grammar path in
     let a = Trainer.build_automata grammar in
     let () = Keymap.print_mappings grammar.Grammar.keymap in
     let () = Terminal.start () in
