@@ -25,7 +25,6 @@ let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state
     match Keymap.lookup_symbol keymap key with
     | None -> loop a keymap a.Types.initial 
     | Some sym ->
-      let () = print_endline sym in
       let next = Automaton.transition a state sym in
       let () = show_recognized a next in
       loop a keymap next
