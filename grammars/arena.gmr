@@ -1,0 +1,43 @@
+# Arena: gramatica propia de ft_ality.
+#
+# Teclas:  tecla = simbolo
+# Los nombres de las teclas son los que devuelve el terminal: letras en minuscula,
+# up, down, left, right, space, return, tab...
+a = [LP]
+s = [HP]
+z = [LK]
+x = [HK]
+q = Block
+up = Up
+down = Down
+left = Left
+right = Right
+
+# Movimientos:  simbolo, simbolo, ... : nombre
+# Un movimiento puede empezar como otro (prefijo comun) y varios pueden compartir secuencia.
+
+# Golpes sueltos
+[LP] : Jab
+[HP] : Haymaker
+[HP] : Heavy Strike
+[LK] : Low Kick
+[HK] : Roundhouse
+
+# Cadenas de golpes (comparten el prefijo [LP])
+[LP], [LP] : Double Jab
+[LP], [LP], [HP] : Triple Combo
+[LP], [HP] : Jab Cross
+[LP], [LK], [HK] : Sweeping Chain
+
+# Movimientos con direcciones
+Right, Right : Dash Forward
+Left, Left : Dash Back
+Down, Right, [LP] : Fireball
+Down, Right, [HP] : Strong Fireball
+Down, Left, [LK] : Back Sweep
+Up, [HK] : Flying Kick
+Down, Down, [HK] : Ground Slam
+
+# Defensa
+Block, [LP] : Counter Strike
+Block, Block : Perfect Guard
