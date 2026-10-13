@@ -1,5 +1,8 @@
 (* ---------- Training ---------- *)
 
+(* Agrega un movimiento a un estado final
+   Si el estado ya existe agrega el movimiento a su lista
+   Si no existe crea una nueva entrada para ese estado *)
 let rec add_final (state) (move_name) (final_states) =
   match final_states with
   | [] ->
@@ -11,6 +14,8 @@ let rec add_final (state) (move_name) (final_states) =
     else
       (final_state, moves) :: add_final state move_name rest
 
+(* Entrena una combinacion simbolo a simbolo creando o reutilizando hasta llegar a
+   su estado final, donde guarda el nombre del movimiento, estado final y siguiente estado libre *)
 let rec train (state) (word) (move_name) (transitions) (final_states) (next_free_state) =
   match word with
   | [] ->
@@ -26,6 +31,8 @@ let rec train (state) (word) (move_name) (transitions) (final_states) (next_free
         let new_transitions = new_transition :: transitions in (* guardamos en la lista *)
         train (next_state) (rest) (move_name) (new_transitions) (final_states) (next_free_state+1) (* llamamos a la funcion de nuevo *)
 
+(* Recorre todas las combinaciones de la gramatica (words) y entrena al automata
+   acumulando transiciones, estados finales y el siguiente estado libre *)
 let rec train_words (words) (transitions) (final_states) (next_free_state)  =
   match words with
   | [] -> (transitions, final_states, next_free_state)
@@ -35,6 +42,8 @@ let rec train_words (words) (transitions) (final_states) (next_free_state)  =
         train_words (rest) (new_transitions) (new_final_states) (new_next_free_state)
 
 (* Gramatica -> automata *)
+(* Constructor del automata a partir de la gramatica.
+   Usandoel resultado del entrenamiento para rellenar los componentes *)
 let build_automata (grammar) =
   let (transitions, finals, next_free_state) = train_words grammar.Grammar.moves [] [] 1 in
   {
