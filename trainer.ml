@@ -45,7 +45,7 @@ let rec train_words (words) (transitions) (final_states) (next_free_state)  =
 (* Constructor del automata a partir de la gramatica.
    Usando el resultado del entrenamiento para rellenar los componentes *)
 let build_automata (grammar) =
-  let (transitions, finals, next_free_state) = train_words grammar.Types.moves [] [] 1 in
+  let (transitions, finals, next_free_state) = train_words (grammar.Types.moves) [] [] 1 in
   {
     Types.states = List.init next_free_state (fun i -> i);
     alphabet = List.sort_uniq compare (List.map (fun (_, s, _) -> s) transitions);

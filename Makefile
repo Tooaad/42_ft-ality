@@ -5,7 +5,7 @@ SRC = types.ml parser.ml automaton.ml trainer.ml terminal.ml main.ml
 OBJDIR = obj
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.ml=.cmx))
 
-OCAMLOPT = ocamlfind ocamlopt -I $(OBJDIR)
+OCAMLOPT = ocamlopt -I $(OBJDIR)
 
 all: $(NAME)
 
