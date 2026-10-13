@@ -1,11 +1,9 @@
 # Entorno de desarrollo OCaml (WSL2/Ubuntu). Uso: make -f setup.mk
 # No es el Makefile del proyecto; solo prepara la maquina de desarrollo.
 
-# LIBS: librerias que usa el proyecto (ocamlsdl necesita libsdl1.2-dev, ver 'apt')
+# El proyecto solo necesita OCaml (ocamlopt) y se construye con el Makefile.
 # TOOLS: herramientas de desarrollo, no se usan en el codigo entregado
-# (el proyecto se construye solo con el Makefile; ocaml-lsp-server trae dune como
-# dependencia, pero no lo usamos)
-LIBS = ocamlfind ocamlsdl
+# (ocaml-lsp-server trae dune como dependencia, pero no lo usamos)
 TOOLS = ocaml-lsp-server utop
 
 .PHONY: all apt opam tools check
@@ -14,7 +12,7 @@ all: apt opam tools check
 
 apt:
 	sudo apt update
-	sudo apt install -y opam build-essential m4 pkg-config libsdl1.2-dev
+	sudo apt install -y opam build-essential m4 pkg-config
 
 # --disable-sandboxing: bubblewrap suele fallar en WSL2
 opam:
@@ -23,9 +21,9 @@ opam:
 
 # 'opam exec --' sustituye a 'eval $(opam env)', que no persiste entre recetas de make
 tools:
-	opam install -y $(LIBS) $(TOOLS)
+	opam install -y $(TOOLS)
 
 check:
 	opam exec -- ocaml -version
-	opam exec -- ocamlfind ocamlopt -version
+	opam exec -- ocamlopt -version
 	@echo "Listo. En tu terminal ejecuta: eval \$$(opam env)"
