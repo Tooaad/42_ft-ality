@@ -1,20 +1,17 @@
-(* Lectura del teclado por terminal: devuelve el nombre de cada tecla en cuanto se pulsa,
-   sin esperar a Enter (ej: "a", "up", "space"). *)
-
 (* Terminal en modo normal: espera Enter y muestra lo que se escribe.
-   El 2>/dev/null evita avisos de stty cuando la entrada no es un terminal (una tuberia). *)
+   El 2>/dev/null evita avisos de stty cuando la entrada no es un terminal (una pipe). *)
 let stop () : unit =
   let _ = Sys.command "stty icanon echo 2>/dev/null" in
   ()
 
-(* Terminal tecla a tecla y sin eco. Se restaura al salir (at_exit).
-   Ctrl+C se convierte en un exit normal para que cuente como salir. *)
+(* Terminal tecla a tecla y sin echo. Se restaura al salir (at_exit).
+   Ctrl+C se convierte en un exit normal para que funcione como salir. *)
 let start () : unit =
   let _ = Sys.command "stty -icanon -echo 2>/dev/null" in
   let () = at_exit stop in
   Sys.set_signal Sys.sigint (Sys.Signal_handle (fun _ -> exit 130))
 
-(* Siguiente caracter de la entrada, o None si se acabo *)
+(* Siguiente caracter de la entrada, o None si es EOF *)
 let read_char () : char option =
   match input_char stdin with
   | c -> Some c
