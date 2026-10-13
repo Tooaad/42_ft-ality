@@ -45,7 +45,9 @@ let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state)
    en modo crudo y empieza a leer teclas desde el estado inicial. *)
 let run (path : string) : unit =
   match Parser.read_grammar path with
-  | exception Sys_error msg -> prerr_endline ("ft_ality: " ^ msg); exit 1
+  | exception Sys_error msg ->
+    let () = prerr_endline ("ft_ality: " ^ msg) in
+    exit 1
   | grammar ->
     let a = Trainer.build_automata grammar in
     let () = print_mappings grammar.Types.keymap in
@@ -58,5 +60,9 @@ let run (path : string) : unit =
 let () =
   match Sys.argv with
   | [| _; path |] when Sys.file_exists path -> run path
-  | [| _; path |] -> prerr_endline ("ft_ality: no existe el fichero " ^ path); exit 1
-  | _ -> prerr_endline "uso: ./ft_ality fichero_gramatica"; exit 1
+  | [| _; path |] ->
+    let () = prerr_endline ("ft_ality: no existe el fichero " ^ path) in
+    exit 1
+  | _ ->
+    let () = prerr_endline "uso: ./ft_ality fichero_gramatica" in
+    exit 1
