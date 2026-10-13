@@ -43,7 +43,7 @@ let rec train_words (words) (transitions) (final_states) (next_free_state)  =
 
 (* Gramatica -> automata *)
 (* Constructor del automata a partir de la gramatica.
-   Usandoel resultado del entrenamiento para rellenar los componentes *)
+   Usando el resultado del entrenamiento para rellenar los componentes *)
 let build_automata (grammar) =
   let (transitions, finals, next_free_state) = train_words grammar.Types.moves [] [] 1 in
   {
