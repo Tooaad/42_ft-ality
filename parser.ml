@@ -23,8 +23,8 @@ let parse_move (line : string) : Types.move option =
     then Some (symbols, name)
     else None
 
-(* Parsear una linea de la gramatica (las vacias, los comentarios y las mal formateadas se ignoran).
-   Se prueba primero como movimiento: si tiene ':' y '=', es un movimiento. *)
+(* Parsear una linea de la gramatica. Las vacias, los comentarios y las mal formateadas
+   se ignoran. Se prueba primero como movimiento: si tiene ':' y '=', es un movimiento. *)
 let parse_line (grammar : Types.grammar) (raw : string) : Types.grammar =
   let line = String.trim raw in
   if line = "" || line.[0] = '#' then grammar
