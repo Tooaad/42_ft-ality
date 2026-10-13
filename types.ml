@@ -11,13 +11,12 @@ type automaton = {
   transitions : transition list; (* delta *)
 }
 
-(* Tipos de la gramatica: lo que se lee del fichero, antes de construir el automata *)
 type key = string                    (* tecla fisica, ej: "s", "down" *)
 type binding = key * symbol          (* una linea "s = [BP]"  ->  ("s", "[BP]") *)
 type keymap = binding list           (* todos los mapeos: [("s", "[BP]"); ("x", "[FP]")] *)
 type move = symbol list * string     (* "[BP], [FP] : Combo"  ->  (["[BP]"; "[FP]"], "Combo") *)
 
-(* Una linea de la gramatica, ya interpretada *)
+(* Una linea de la gramatica *)
 type line =
   | Skip                  (* vacia o comentario: "", "# hola" *)
   | Key of binding        (* "s = [BP]"  ->  Key ("s", "[BP]") *)
@@ -26,6 +25,6 @@ type line =
 
 (* Lo que se obtiene de leer un fichero de gramatica entero *)
 type grammar = {
-  keymap : keymap;       (* para el teclado: tecla -> simbolo *)
-  moves : move list;     (* para construir el automata *)
+  keymap : keymap;
+  moves : move list;
 }
