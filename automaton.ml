@@ -1,33 +1,39 @@
-let rec find_transition (state) (symbol) (transitions) =
+(* Destino de la flecha que sale de `state` con `symbol`, si existe *)
+let rec find_transition (state : Types.state) (symbol : Types.symbol)
+    (transitions : Types.transition list) : Types.state option =
   match transitions with
   | [] -> None
-  | (origin, sym, destination) :: rest ->
-    if origin = state && sym = symbol then
-      Some destination
-    else
-      find_transition (state) (symbol) (rest)
+  | (origin, label, destination) :: rest ->
+    if origin = state && label = symbol then Some destination
+    else find_transition state symbol rest
 
-let transition (a : Types.automaton) (s : Types.state) (sym : Types.symbol) : Types.state =
-  match find_transition s sym a.Types.transitions with
-  | Some dest -> dest
+(* Estado siguiente (funcion delta). Si no hay flecha, se reintenta desde el estado inicial;
+   si tampoco, se vuelve al inicial. *)
+let transition (automaton : Types.automaton) (state : Types.state) (symbol : Types.symbol)
+  : Types.state =
+  match find_transition state symbol automaton.Types.transitions with
+  | Some destination -> destination
   | None ->
-    match find_transition a.Types.initial sym a.Types.transitions with
-    | Some dest -> dest
-    | None -> a.Types.initial
+    match find_transition automaton.Types.initial symbol automaton.Types.transitions with
+    | Some destination -> destination
+    | None -> automaton.Types.initial
 
-let recognized (a : Types.automaton) (s : Types.state) : string list =
-  match List.assoc_opt s a.Types.finals with
+(* Nombres de los movimientos que reconoce un estado (vacia si no es final) *)
+let recognized (automaton : Types.automaton) (state : Types.state) : string list =
+  match List.assoc_opt state automaton.Types.finals with
   | Some names -> names
   | None -> []
 
-(* Secuencia de simbolos que lleva del estado inicial hasta el estado s.
-   El automata es un arbol (los prefijos se comparten), asi que cada estado tiene una
-   unica flecha de entrada y el camino es unico.
-   path_to a 2  ->  ["[BP]"; "[FP]"]     (0 --[BP]--> 1 --[FP]--> 2)
-   path_to a 0  ->  [] *)
-let rec path_to (a : Types.automaton) (s : Types.state) : Types.symbol list =
-  if s = a.Types.initial then []
+(* Flecha que llega a `state`, si existe *)
+let incoming_transition (automaton : Types.automaton) (state : Types.state)
+  : Types.transition option =
+  List.find_opt (fun (_, _, destination) -> destination = state) automaton.Types.transitions
+
+(* Simbolos que llevan del estado inicial hasta `state`: ["[BP]"; "[FP]"].
+   Cada estado tiene una sola flecha de entrada, asi que el camino es unico. *)
+let rec path_to (automaton : Types.automaton) (state : Types.state) : Types.symbol list =
+  if state = automaton.Types.initial then []
   else
-    match List.find_opt (fun (_, _, dest) -> dest = s) a.Types.transitions with
-    | Some (from, sym, _) -> path_to a from @ [sym]
+    match incoming_transition automaton state with
+    | Some (origin, label, _) -> path_to automaton origin @ [label]
     | None -> []
