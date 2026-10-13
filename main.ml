@@ -42,14 +42,12 @@ let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state)
   match Terminal.next_key () with
   | None -> ()
   | Some key ->
-    match lookup_symbol keymap key with
-    | None ->
-      let () = show_progress a state a.Types.initial in
-      loop a keymap a.Types.initial
-    | Some sym ->
-      let next = Automaton.transition a state sym in
-      let () = show_progress a state next in
-      loop a keymap next
+    let next =
+      match lookup_symbol keymap key with
+      | None -> a.Types.initial
+      | Some sym -> Automaton.transition a state sym in
+    let () = show_progress a state next in
+    loop a keymap next
 
 (* Poner el programa en marcha con un fichero de gramatica.
    Lee la gramatica, la entrena en un automata, muestra el mapeo de teclas, pone el terminal
