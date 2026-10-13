@@ -1,6 +1,9 @@
 (* El keymap traduce las teclas del jugador a simbolos del automata, y se muestra en pantalla
    antes de empezar. Se calcula siempre desde la gramatica. *)
 
+(* Linea de guiones que separa secciones de la salida *)
+let separator : string = "----------------------"
+
 (* lookup_symbol [("s", "[BP]")] "s"  ->  Some "[BP]"
    lookup_symbol [("s", "[BP]")] "k"  ->  None   (tecla sin mapear) *)
 let lookup_symbol (keymap : Types.keymap) (key : string) : Types.symbol option =
@@ -14,7 +17,7 @@ let lookup_symbol (keymap : Types.keymap) (key : string) : Types.symbol option =
 let print_mappings (keymap : Types.keymap) : unit =
   let () = print_endline "Key mappings:" in
   let () = List.iter (fun (key, symbol) -> print_endline (key ^ " -> " ^ symbol)) keymap in
-  print_endline "----------------------"
+  print_endline separator
 
 (* Mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
    si reconoce movimientos, sus nombres con " !!" y una linea en blanco. Si la secuencia
@@ -22,7 +25,7 @@ let print_mappings (keymap : Types.keymap) : unit =
 let show_progress (a : Types.automaton) (prev : Types.state) (next : Types.state) : unit =
   let prev_length = List.length (Automaton.path_to a prev) in
   let path = Automaton.path_to a next in
-  let () = if prev_length > 0 && List.length path <= prev_length then print_endline "----------------------" in
+  let () = if prev_length > 0 && List.length path <= prev_length then print_endline separator in
   match path with
   | [] -> ()
   | _ ->
