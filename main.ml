@@ -1,3 +1,21 @@
+(* El keymap traduce las teclas del jugador a simbolos del automata, y se muestra en pantalla
+   antes de empezar. Se calcula siempre desde la gramatica. *)
+
+(* lookup_symbol [("s", "[BP]")] "s"  ->  Some "[BP]"
+   lookup_symbol [("s", "[BP]")] "k"  ->  None   (tecla sin mapear) *)
+let lookup_symbol (keymap : Types.keymap) (key : string) : Types.symbol option =
+  List.assoc_opt key keymap
+
+(* Imprime:
+   Key mappings:
+   s -> [BP]
+   x -> [FP]
+   ---------------------- *)
+let print_mappings (keymap : Types.keymap) : unit =
+  let () = print_endline "Key mappings:" in
+  let () = List.iter (fun (key, symbol) -> print_endline (key ^ " -> " ^ symbol)) keymap in
+  print_endline "----------------------"
+
 (* PIEZA 1: mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
    si reconoce movimientos, sus nombres con " !!" y una linea en blanco. Si la secuencia
    reinicia (el intento se abandona o ya habia terminado), antes imprime una linea de guiones. *)
@@ -21,7 +39,7 @@ let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state)
   match Terminal.next_key () with
   | None -> ()
   | Some key ->
-    match Keymap.lookup_symbol keymap key with
+    match lookup_symbol keymap key with
     | None ->
       let () = show_progress a state a.Types.initial in
       loop a keymap a.Types.initial
@@ -38,7 +56,7 @@ let run (path : string) : unit =
   | exception Sys_error msg -> prerr_endline ("ft_ality: " ^ msg); exit 1
   | grammar ->
     let a = Trainer.build_automata grammar in
-    let () = Keymap.print_mappings grammar.Types.keymap in
+    let () = print_mappings grammar.Types.keymap in
     let () = Terminal.start () in
     loop a grammar.Types.keymap a.Types.initial
 
