@@ -16,7 +16,7 @@ let print_mappings (keymap : Types.keymap) : unit =
   let () = List.iter (fun (key, symbol) -> print_endline (key ^ " -> " ^ symbol)) keymap in
   print_endline "----------------------"
 
-(* PIEZA 1: mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
+(* Mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
    si reconoce movimientos, sus nombres con " !!" y una linea en blanco. Si la secuencia
    reinicia (el intento se abandona o ya habia terminado), antes imprime una linea de guiones. *)
 let show_progress (a : Types.automaton) (prev : Types.state) (next : Types.state) : unit =
@@ -33,7 +33,7 @@ let show_progress (a : Types.automaton) (prev : Types.state) (next : Types.state
       let () = List.iter (fun name -> print_endline (name ^ " !!")) names in
       print_endline ""
 
-(* PIEZA 2: bucle principal. Lee una tecla, la traduce a simbolo, avanza el automata y muestra
+(* Bucle principal. Lee una tecla, la traduce a simbolo, avanza el automata y muestra
    el progreso. Las teclas sin mapear reinician el automata. El estado viaja como argumento. *)
 let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state) : unit =
   match Terminal.next_key () with
@@ -48,7 +48,7 @@ let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state)
       let () = show_progress a state next in
       loop a keymap next
 
-(* PIEZA 3: poner el programa en marcha con un fichero de gramatica.
+(* Poner el programa en marcha con un fichero de gramatica.
    Lee la gramatica, la entrena en un automata, muestra el mapeo de teclas, pone el terminal
    en modo crudo y empieza a leer teclas desde el estado inicial. *)
 let run (path : string) : unit =
@@ -60,7 +60,7 @@ let run (path : string) : unit =
     let () = Terminal.start () in
     loop a grammar.Types.keymap a.Types.initial
 
-(* PIEZA 4: punto de entrada. Lee el argumento de la linea de comandos (ruta de la gramatica)
+(* Punto de entrada. Lee el argumento de la linea de comandos (ruta de la gramatica)
    y pone el programa en marcha. Comprueba aqui los argumentos, que es lo unico que conoce
    la linea de comandos; run solo recibe una ruta. *)
 let () =
