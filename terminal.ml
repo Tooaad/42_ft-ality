@@ -11,35 +11,36 @@ let start () : unit =
   let () = at_exit stop in
   Sys.set_signal Sys.sigint (Sys.Signal_handle (fun _ -> exit 130))
 
-(* Siguiente caracter de la entrada, o None si es EOF *)
+(* Siguiente caracter de la entrada, o None si se acaba (EOF) o se pulsa Ctrl+D *)
 let read_char () : char option =
   match input_char stdin with
+  | '\004' -> None                  (* Ctrl+D *)
   | c -> Some c
   | exception End_of_file -> None
 
 (* Tras un ESC: las flechas llegan como ESC '[' y una letra (A, B, C, D). Si no, "escape". *)
-let read_escape () : string option =
+let read_arrow_key () : string =
   let first = read_char () in
   let second = if first = Some '[' then read_char () else None in
   match second with
-  | Some 'A' -> Some "up"
-  | Some 'B' -> Some "down"
-  | Some 'C' -> Some "right"
-  | Some 'D' -> Some "left"
-  | _ -> Some "escape"
+  | Some 'A' -> "up"
+  | Some 'B' -> "down"
+  | Some 'C' -> "right"
+  | Some 'D' -> "left"
+  | _ -> "escape"
 
 (* Nombre de una tecla normal: letras en minuscula, y nombres para espacio, Enter, tab y retroceso *)
 let name_of_char (c : char) : string =
   match c with
   | ' ' -> "space"
-  | '\n' | '\r' -> "return"
-  | '\t' -> "tab"
-  | '\127' -> "backspace"
+  | '\n' | '\r' -> "return"        (* Enter *)
+  | '\t' -> "tab"                  (* Tab *)
+  | '\127' -> "backspace"          (* DEL (127): la tecla de retroceso *)
   | _ -> String.lowercase_ascii (String.make 1 c)
 
 (* Nombre de la siguiente tecla pulsada, o None al acabarse la entrada (o con Ctrl+D) *)
 let next_key () : string option =
   match read_char () with
-  | None | Some '\004' -> None
-  | Some '\027' -> read_escape ()
+  | None -> None
+  | Some '\027' -> Some (read_arrow_key ())     (* ESC (27): podria ser una flecha *)
   | Some c -> Some (name_of_char c)
