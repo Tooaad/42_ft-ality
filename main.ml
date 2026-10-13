@@ -1,19 +1,5 @@
-(* El keymap traduce las teclas del jugador a simbolos del automata, y se muestra en pantalla
-   antes de empezar. Se calcula siempre desde la gramatica. *)
-
-(* Linea de guiones que separa secciones de la salida *)
 let separator : string = "----------------------"
 
-(* lookup_symbol [("s", "[BP]")] "s"  ->  Some "[BP]"
-   lookup_symbol [("s", "[BP]")] "k"  ->  None   (tecla sin mapear) *)
-let lookup_symbol (keymap : Types.keymap) (key : string) : Types.symbol option =
-  List.assoc_opt key keymap
-
-(* Imprime:
-   Key mappings:
-   s -> [BP]
-   x -> [FP]
-   ---------------------- *)
 let print_mappings (keymap : Types.keymap) : unit =
   let () = print_endline "Key mappings:" in
   let () = List.iter (fun (key, symbol) -> print_endline (key ^ " -> " ^ symbol)) keymap in
@@ -35,6 +21,11 @@ let show_progress (a : Types.automaton) (prev : Types.state) (next : Types.state
     | names ->
       let () = List.iter (fun name -> print_endline (name ^ " !!")) names in
       print_endline ""
+
+(* lookup_symbol [("s", "[BP]")] "s"  ->  Some "[BP]"
+   lookup_symbol [("s", "[BP]")] "k"  ->  None   (tecla sin mapear) *)
+let lookup_symbol (keymap : Types.keymap) (key : string) : Types.symbol option =
+  List.assoc_opt key keymap
 
 (* Bucle principal. Lee una tecla, la traduce a simbolo, avanza el automata y muestra
    el progreso. Las teclas sin mapear reinician el automata. El estado viaja como argumento. *)
