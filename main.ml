@@ -1,7 +1,7 @@
 (* PIEZA 1: mostrar el progreso al pasar del estado `prev` al `next`: la secuencia pulsada y,
    si reconoce movimientos, sus nombres con " !!" y una linea en blanco. Si la secuencia
    reinicia (el intento se abandona o ya habia terminado), antes imprime una linea de guiones. *)
-let show_progress (a : Types.automata) (prev : Types.state) (next : Types.state) : unit =
+let show_progress (a : Types.automaton) (prev : Types.state) (next : Types.state) : unit =
   let prev_length = List.length (Automaton.path_to a prev) in
   let path = Automaton.path_to a next in
   let () = if prev_length > 0 && List.length path <= prev_length then print_endline "----------------------" in
@@ -17,7 +17,7 @@ let show_progress (a : Types.automata) (prev : Types.state) (next : Types.state)
 
 (* PIEZA 2: bucle principal. Lee una tecla, la traduce a simbolo, avanza el automata y muestra
    el progreso. Las teclas sin mapear reinician el automata. El estado viaja como argumento. *)
-let rec loop (a : Types.automata) (keymap : Grammar.keymap) (state : Types.state) : unit =
+let rec loop (a : Types.automaton) (keymap : Types.keymap) (state : Types.state) : unit =
   match Terminal.next_key () with
   | None -> ()
   | Some key ->
@@ -38,9 +38,9 @@ let run (path : string) : unit =
   | exception Sys_error msg -> prerr_endline ("ft_ality: " ^ msg); exit 1
   | grammar ->
     let a = Trainer.build_automata grammar in
-    let () = Keymap.print_mappings grammar.Grammar.keymap in
+    let () = Keymap.print_mappings grammar.Types.keymap in
     let () = Terminal.start () in
-    loop a grammar.Grammar.keymap a.Types.initial
+    loop a grammar.Types.keymap a.Types.initial
 
 (* PIEZA 4: punto de entrada. Lee el argumento de la linea de comandos (ruta de la gramatica)
    y pone el programa en marcha. Comprueba aqui los argumentos, que es lo unico que conoce
