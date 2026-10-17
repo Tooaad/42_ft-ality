@@ -3,6 +3,61 @@
 Entrenador de combos de juegos de lucha basado en un autómata finito, hecho en OCaml.
 Ver `en.subject.pdf` para el enunciado.
 
+## Ejecutar con Docker
+
+Desde la raíz del proyecto, construye la imagen y ejecuta el entrenador con un solo comando
+(no necesitas instalar OCaml en tu equipo):
+
+```bash
+make docker
+```
+
+Para elegir otra gramática:
+
+```bash
+make docker GRAMMAR=grammars/test.gmr
+```
+
+Para borrar la imagen del proyecto:
+
+```bash
+make docker-clean
+```
+
+El contenedor se elimina automáticamente al salir. Cierra el entrenador antes de borrar la imagen.
+
+También puedes ejecutar los comandos Docker directamente:
+
+```bash
+docker build -t ft-ality .
+```
+
+Ejecuta el entrenador con la gramática `grammars/arena.gmr`:
+
+```bash
+docker run --rm -it ft-ality
+```
+
+`-it` permite leer las teclas al pulsarlas. Sal con `Ctrl+D` o `Ctrl+C`.
+Para usar la otra gramática incluida:
+
+```bash
+docker run --rm -it ft-ality grammars/test.gmr
+```
+
+Para cargar una gramática de tu equipo sin reconstruir la imagen (Bash / WSL):
+
+```bash
+docker run --rm -it --mount type=bind,src="$(pwd)/grammars",dst=/data,readonly ft-ality /data/test.gmr
+```
+
+La imagen compila con el `Makefile` en una primera etapa y ejecuta el binario como
+usuario sin privilegios en una segunda etapa, sin el compilador. Si cambias el
+código o las gramáticas incluidas, vuelve a construir la imagen.
+
+En WSL, Docker Desktop debe estar iniciado y tener activada la integración con tu
+distribución en **Settings > Resources > WSL Integration**.
+
 ## Primeros pasos
 
 ### 1. Instalar el entorno OCaml (WSL2 / Ubuntu)

@@ -1,0 +1,9 @@
+.git
+obj
+ft_ality
+*.cmi
+*.cmo
+*.cmx
+*.o
+*.Identifier
+*.pdf
